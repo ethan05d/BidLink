@@ -3,11 +3,13 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
-import { AuctionForm } from "./AuctionForm";
 import { useSession } from "next-auth/react";
 import { NavbarMenu } from "./NavbarMenu";
 import { Menu } from "lucide-react";
+import { usePathname } from "next/navigation";
+
 export const NavBar = () => {
+  const pathname = usePathname();
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -43,7 +45,11 @@ export const NavBar = () => {
           <Link
             href="/"
             prefetch={false}
-            className="py-2 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200"
+            className={`py-2 px-3 rounded-md transition-colors duration-200 ${
+              pathname === "/"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            }`}
           >
             Home
           </Link>
@@ -51,14 +57,15 @@ export const NavBar = () => {
           <Link
             href="/auctions"
             prefetch={false}
-            className="py-2 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200"
+            className={`py-2 px-3 rounded-md transition-colors duration-200 ${
+              pathname === "/auctions"
+                ? "bg-gray-200 text-gray-900"
+                : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            }`}
           >
             My Auctions
           </Link>
 
-          <div className="cursor-pointer flex mt-2 mr-2 px-2 bg-slate-800 rounded-md md:mt-0 p-1 hover:bg-slate-500 transition-colors duration-200">
-            <AuctionForm isEditing={false} />
-          </div>
           <NavbarMenu />
         </div>
       </nav>

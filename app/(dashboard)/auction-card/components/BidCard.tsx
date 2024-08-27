@@ -9,28 +9,30 @@ interface BidInputProps {
 
 export const BidCard = ({ auctionCard }: BidInputProps) => {
   const [days, hours, minutes, seconds] = useCountdown(auctionCard.end_time);
+  let showCounter = true;
+
+  if (days + hours + minutes + seconds <= 0) {
+    showCounter = false;
+  }
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
-      <div className="flex flex-col space-y-4 mb-6">
-        <div className="flex flex-row items-center justify-end bg-blue-50 p-4 rounded-lg">
-          <span className="text-lg md:text-xl font-semibold text-blue-700 whitespace-nowrap">
-            Time Left
-          </span>
-          <div className="flex w-full justify-end">
-            <ShowCounter
-              days={days}
-              hours={hours}
-              minutes={minutes}
-              seconds={seconds}
-            />
-          </div>
-        </div>
+    <div className="bg-white p-4 md:p-3 rounded-lg shadow-md border border-gray-200">
+      <div className="flex flex-col space-y-4">
+        {showCounter ? (
+          <ShowCounter
+            days={days}
+            hours={hours}
+            minutes={minutes}
+            seconds={seconds}
+          />
+        ) : (
+          <ShowCounter days={0} hours={0} minutes={0} seconds={0} />
+        )}
         <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
           <span className="text-lg md:text-xl font-semibold text-gray-700">
             Current Bid
           </span>
-          <span className="text-xl md:text-2xl font-bold text-green-600">
+          <span className="text-2xl md:text-3xl font-bold text-green-700">
             $
             {auctionCard.starting_bid.toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -38,8 +40,10 @@ export const BidCard = ({ auctionCard }: BidInputProps) => {
             })}
           </span>
         </div>
+        <div>
+          <BidForm auctionCard={auctionCard} />
+        </div>
       </div>
-      <BidForm />
     </div>
   );
 };

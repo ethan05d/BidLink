@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { BidCard } from "../components/BidCard";
 import { AuctionDetails } from "../components/AuctionDetails";
 import { AuctionDescription } from "../components/AuctionDescription";
+import { BidForm } from "../components/BidForm";
 
 const fetchAuctionCard = async (
   auction_id: string
@@ -53,13 +54,13 @@ export default function AuctionCardPage() {
               alt={auctionCard.title}
               className="w-full h-3/4 object-cover rounded-lg shadow-lg"
             />
+
+            <AuctionDetails auctionCard={auctionCard} />
           </div>
           <div className="w-full lg:w-1/2 space-y-6">
             <AuctionDescription auctionCard={auctionCard} />
 
             <BidCard auctionCard={auctionCard} />
-
-            <AuctionDetails auctionCard={auctionCard} />
           </div>
         </div>
       ) : (

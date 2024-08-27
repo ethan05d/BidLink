@@ -30,8 +30,6 @@ export async function DELETE(
   { params }: { params: { key: string } }
 ) {
   try {
-    console.log("Deleting object with key:", params.key);
-
     const deleteCommand = new DeleteObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME,
       Key: params.key,

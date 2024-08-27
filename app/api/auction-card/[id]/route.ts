@@ -21,24 +21,36 @@ const auctionCardSchema = z.object({
   image_url: z.string().url().nullable().optional(),
 });
 
+function handleError(error: unknown) {
+  console.error("Error:", error);
+  if (error instanceof z.ZodError) {
+    return NextResponse.json(
+      { success: false, error: error.errors },
+      { status: 400 }
+    );
+  }
+  return NextResponse.json(
+    { success: false, error: "Internal Server Error" },
+    { status: 500 }
+  );
+}
+
 export async function POST(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
-    const session = await auth();
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await auth();
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const userId = session.user.id;
-    const userName = session.user.name;
+  try {
     const { id } = params;
     const supabase = createClient();
     const json = await req.json();
-    const auctionCard = auctionCardSchema.parse(json);
+    const auctionCard = auctionCardSchema.parse({ ...json, id });
+    const { id: userId, name: userName } = session.user;
 
-    // Insert the auction card into the database
     const { data, error } = await supabase
       .from("auction_cards")
       .insert([
@@ -56,30 +68,11 @@ export async function POST(
       ])
       .select();
 
-    if (error) {
-      console.error("Database insert error:", error.message);
-      console.error("Full error object:", error);
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 500 }
-      );
-    }
+    if (error) throw error;
 
     return NextResponse.json({ success: true, auctionCard: data[0] });
   } catch (error) {
-    console.error("Error creating auction card:", error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { success: false, error: error.errors },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -94,6 +87,8 @@ export async function GET(
     .select("*")
     .eq("id", id);
 
+  if (error) return handleError(error);
+
   return NextResponse.json({ auctionCard: data });
 }
 
@@ -101,19 +96,18 @@ export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
-    const session = await auth();
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await auth();
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
+  try {
     const userId = session.user.id;
     const supabase = createClient();
     const { id } = params;
     const json = await req.json();
     const updateData = auctionCardUpdateSchema.parse(json);
 
-    // Update the auction card in the database
     const { data, error } = await supabase
       .from("auction_cards")
       .update(updateData)
@@ -121,14 +115,7 @@ export async function PUT(
       .eq("seller_id", userId)
       .select();
 
-    if (error) {
-      console.error("Database update error:", error.message);
-      console.error("Full error object:", error);
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 500 }
-      );
-    }
+    if (error) throw error;
 
     if (data.length === 0) {
       return NextResponse.json(
@@ -139,19 +126,7 @@ export async function PUT(
 
     return NextResponse.json({ success: true, auctionCard: data[0] });
   } catch (error) {
-    console.error("Error updating auction card:", error);
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { success: false, error: error.errors },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -159,36 +134,25 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  try {
-    const session = await auth();
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await auth();
+  if (!session || !session.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
+  try {
     const userId = session.user.id;
     const supabase = createClient();
     const { id } = params;
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("auction_cards")
       .delete()
       .eq("id", id)
       .eq("seller_id", userId);
 
-    if (error) {
-      console.error("Database delete error:", error.message);
-      console.error("Full error object:", error);
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 500 }
-      );
-    }
+    if (error) throw error;
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting auction card:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

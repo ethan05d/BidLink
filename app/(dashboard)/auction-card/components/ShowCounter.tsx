@@ -25,13 +25,13 @@ export const ShowCounter = ({
           <DateTimeDisplay
             value={minutes}
             type="Min"
-            isDanger={minutes <= 15}
+            isDanger={minutes <= 15 && hours <= 1 && days <= 3}
           />
           <span className="text-gray-400">:</span>
           <DateTimeDisplay
             value={seconds}
             type="Sec"
-            isDanger={seconds <= 30}
+            isDanger={seconds <= 30 && minutes <= 15 && hours <= 1 && days <= 3}
           />
         </div>
       </div>

@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { BidCard } from "../components/BidCard";
 import { AuctionDetails } from "../components/AuctionDetails";
-import { AuctionDescription } from "../components/AuctionDescription";
-import { BidForm } from "../components/BidForm";
 
 const fetchAuctionCard = async (
   auction_id: string
@@ -58,8 +56,6 @@ export default function AuctionCardPage() {
             <AuctionDetails auctionCard={auctionCard} />
           </div>
           <div className="w-full lg:w-1/2 space-y-6">
-            <AuctionDescription auctionCard={auctionCard} />
-
             <BidCard auctionCard={auctionCard} />
           </div>
         </div>

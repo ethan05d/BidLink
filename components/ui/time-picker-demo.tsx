@@ -17,10 +17,8 @@ export function TimePickerDemo({ date, setDate }: TimePickerDemoProps) {
 
   return (
     <div className="flex items-end gap-2">
+      <div className="flex items-center justify-center mb-2">Time</div>
       <div className="grid gap-1 text-center">
-        <Label htmlFor="hours" className="text-xs">
-          Hours
-        </Label>
         <TimePickerInput
           picker="hours"
           date={date}
@@ -30,9 +28,6 @@ export function TimePickerDemo({ date, setDate }: TimePickerDemoProps) {
         />
       </div>
       <div className="grid gap-1 text-center">
-        <Label htmlFor="minutes" className="text-xs">
-          Minutes
-        </Label>
         <TimePickerInput
           picker="minutes"
           date={date}
@@ -42,18 +37,7 @@ export function TimePickerDemo({ date, setDate }: TimePickerDemoProps) {
           onRightFocus={() => secondRef.current?.focus()}
         />
       </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="seconds" className="text-xs">
-          Seconds
-        </Label>
-        <TimePickerInput
-          picker="seconds"
-          date={date}
-          setDate={setDate}
-          ref={secondRef}
-          onLeftFocus={() => minuteRef.current?.focus()}
-        />
-      </div>
+
       <div className="flex h-10 items-center">
         <Clock className="ml-2 h-4 w-4" />
       </div>

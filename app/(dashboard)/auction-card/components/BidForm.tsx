@@ -3,14 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { AuctionCardType } from "../../page";
 import { useState } from "react";
-import {
-  DollarSign,
-  Minus,
-  Plus,
-  RefreshCcw,
-  TimerResetIcon,
-} from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { DollarSign, Minus, Plus, RefreshCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { AnimatedNumber } from "@/components/ui/animatednumber";
 
@@ -19,11 +12,19 @@ export const BidForm = ({ auctionCard }: { auctionCard: AuctionCardType }) => {
   const [incrementAmount, setIncrementAmount] = useState(10);
 
   const incrementBid = () => {
+    // If bid is higher than 500% of bid amount
+    const maxBidAmount = 5 * auctionCard.starting_bid;
+    if (bidAmount + incrementAmount > maxBidAmount) {
+      setBidAmount(maxBidAmount);
+      return;
+    }
     setBidAmount(bidAmount + incrementAmount);
   };
 
   const decreaseBid = () => {
+    // If bid is lower than starting amount
     if (bidAmount - incrementAmount < auctionCard.starting_bid) {
+      setBidAmount(auctionCard.starting_bid);
       return;
     }
     setBidAmount(bidAmount - incrementAmount);

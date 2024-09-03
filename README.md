@@ -20,7 +20,7 @@ BidLink is a Next.js-based web application for hosting and participating in onli
 - Axios
 - NextAuth.js
 - Supabase
-- AWS S3 (for image storage)
+- Cloudflare R2 (for image storage)
 
 ## Getting Started
 

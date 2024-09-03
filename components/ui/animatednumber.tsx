@@ -16,7 +16,10 @@ export function AnimatedNumber({
 }: AnimatedNumber) {
   const spring = useSpring(value, springOptions);
   const display = useTransform(spring, (current: any) =>
-    Math.round(current).toLocaleString()
+    current.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
   );
 
   useEffect(() => {

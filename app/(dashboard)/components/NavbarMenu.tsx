@@ -14,18 +14,21 @@ import { SignInForm } from "../../(auth)/components/SignInForm";
 import { SignOutForm } from "../../(auth)/components/SignOutForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AuctionForm } from "./AuctionForm";
+import { usePathname } from "next/navigation";
 
 export const NavbarMenu = () => {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   return (
     <>
       {session ? (
         <>
-          <div className="cursor-pointer flex mt-2 mr-2 px-2 bg-slate-800 rounded-md md:mt-0 p-1 hover:bg-slate-500 transition-colors duration-200">
-            <AuctionForm isEditing={false} />
-          </div>
-
+          {pathname === "/" && (
+            <div className="cursor-pointer flex mt-2 mr-2 px-2 bg-slate-800 rounded-md md:mt-0 p-1 hover:bg-slate-500 transition-colors duration-200">
+              <AuctionForm isEditing={false} />
+            </div>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer flex justify-center items-center md:hover:opacity-80 transition-opacity duration-200 w-8 h-8 sm:w-10 sm:h-10">

@@ -1,20 +1,17 @@
 import { ClockIcon, UserIcon } from "lucide-react";
 
 interface CardDetailsProps {
-  starting_bid: number;
+  current_bid: number;
   seller_name: string;
 }
 
-export const CardDetails = ({
-  starting_bid,
-  seller_name,
-}: CardDetailsProps) => {
+export const CardDetails = ({ current_bid, seller_name }: CardDetailsProps) => {
   return (
     <div className="flex flex-col space-y-4 mt-auto">
       <div className="bg-blue-100 dark:bg-blue-900 rounded-lg p-3">
         <h4 className="flex items-center text-md font-semibold text-blue-800 dark:text-blue-200">
           Current Bid: $
-          {starting_bid.toLocaleString("en-US", {
+          {current_bid.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}

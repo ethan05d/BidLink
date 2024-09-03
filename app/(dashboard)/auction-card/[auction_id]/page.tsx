@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { BidCard } from "../components/BidCard";
 import { AuctionDetails } from "../components/AuctionDetails";
+import { BidProps } from "../components/BidHistoryItem";
 
 const fetchAuctionCard = async (
   auction_id: string
@@ -25,6 +26,14 @@ const fetchAuctionCard = async (
   }
 };
 
+const fetchBidHistory = async (auction_id: string): Promise<BidProps[]> => {
+  const { data } = await axios.get<{
+    bidHistory: BidProps[];
+  }>(`/api/auction-card/${auction_id}/bid-history`);
+
+  return data.bidHistory.reverse();
+};
+
 export default function AuctionCardPage() {
   const queryClient = useQueryClient();
   const { auction_id } = useParams<{ auction_id: string }>();
@@ -34,8 +43,15 @@ export default function AuctionCardPage() {
     queryFn: () => fetchAuctionCard(auction_id),
   });
 
+  const { data: bidHistory } = useQuery<BidProps[]>({
+    queryKey: ["bid_history", auction_id],
+    queryFn: () => fetchBidHistory(auction_id),
+    refetchInterval: 30000,
+  });
+
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["auction_card"] });
+    queryClient.invalidateQueries({ queryKey: ["bid_history"] });
   }, [queryClient]);
 
   return (
@@ -56,7 +72,7 @@ export default function AuctionCardPage() {
             <AuctionDetails auctionCard={auctionCard} />
           </div>
           <div className="w-full lg:w-1/2 space-y-6">
-            <BidCard auctionCard={auctionCard} />
+            <BidCard auctionCard={auctionCard} bidHistory={bidHistory || []} />
           </div>
         </div>
       ) : (

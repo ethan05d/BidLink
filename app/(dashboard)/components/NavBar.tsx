@@ -54,18 +54,6 @@ export const NavBar = () => {
             Home
           </Link>
 
-          <Link
-            href="/auctions"
-            prefetch={false}
-            className={`py-2 px-3 rounded-md transition-colors duration-200 ${
-              pathname === "/auctions"
-                ? "bg-gray-200 text-gray-900"
-                : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-            }`}
-          >
-            My Auctions
-          </Link>
-
           <NavbarMenu />
         </div>
       </nav>

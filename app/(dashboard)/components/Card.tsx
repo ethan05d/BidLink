@@ -13,7 +13,7 @@ interface CardProps {
   id: string;
   title: string;
   description: string;
-  starting_bid: number;
+  current_bid: number;
   seller_id: string;
   seller_name: string;
   end_time: string;
@@ -24,7 +24,7 @@ export const Card = ({
   id,
   title,
   description,
-  starting_bid,
+  current_bid,
   seller_id,
   seller_name,
   image_url,
@@ -82,7 +82,7 @@ export const Card = ({
           {description}
         </p>
 
-        <CardDetails starting_bid={starting_bid} seller_name={seller_name} />
+        <CardDetails current_bid={current_bid} seller_name={seller_name} />
       </div>
     </div>
   );

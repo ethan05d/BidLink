@@ -143,13 +143,22 @@ export async function DELETE(
     const userId = session.user.id;
     const supabase = createClient();
     const { id } = params;
-    const { error } = await supabase
+    // First, delete the bids associated with the auction card
+    const { error: bidsError } = await supabase
+      .from("bids")
+      .delete()
+      .eq("auction_card_id", id);
+
+    if (bidsError) throw bidsError;
+
+    // Then, delete the auction card itself
+    const { error: auctionCardError } = await supabase
       .from("auction_cards")
       .delete()
       .eq("id", id)
       .eq("seller_id", userId);
 
-    if (error) throw error;
+    if (auctionCardError) throw auctionCardError;
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -78,7 +78,7 @@ export const AuctionForm = ({
     defaultValues: {
       title: "",
       description: "",
-      starting_bid: 0,
+      starting_bid: 0.0,
     },
   });
 
@@ -150,7 +150,7 @@ export const AuctionForm = ({
       form.reset({
         title: "",
         description: "",
-        starting_bid: 0,
+        starting_bid: 0.0,
         image: undefined,
         end_time: "",
       });

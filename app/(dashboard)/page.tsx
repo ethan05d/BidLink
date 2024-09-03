@@ -6,7 +6,6 @@ import { SkeletonCard } from "./components/SkeletonCard";
 import axios from "axios";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 
 export type AuctionCardType = {
   id: string;
@@ -18,6 +17,7 @@ export type AuctionCardType = {
   end_time: string;
   image_url?: string;
   created_at?: string;
+  current_bid?: number;
 };
 
 const fetchAuctionCards = async (): Promise<AuctionCardType[]> => {
@@ -37,7 +37,6 @@ const fetchAuctionCards = async (): Promise<AuctionCardType[]> => {
 
 const HomePage = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
 
   const { data: auctionCards, isLoading } = useQuery<AuctionCardType[]>({
     queryKey: ["auction_cards"],
@@ -69,7 +68,7 @@ const HomePage = () => {
               id,
               title,
               description,
-              starting_bid,
+              current_bid,
               seller_id,
               seller_name,
               end_time,
@@ -80,7 +79,7 @@ const HomePage = () => {
                 id={id}
                 title={title}
                 description={description}
-                starting_bid={starting_bid}
+                current_bid={current_bid || 0}
                 seller_id={seller_id || ""}
                 seller_name={seller_name || ""}
                 end_time={end_time}

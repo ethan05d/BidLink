@@ -16,8 +16,10 @@ export type AuctionCardType = {
   seller_name?: string;
   end_time: string;
   image_url?: string;
+  winner_id?: string;
   created_at?: string;
   current_bid?: number;
+  auction_status?: string;
 };
 
 const fetchAuctionCards = async (): Promise<AuctionCardType[]> => {

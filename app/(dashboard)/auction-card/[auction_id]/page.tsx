@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { BidCard } from "../components/BidCard";
 import { AuctionDetails } from "../components/AuctionDetails";
 import { BidProps } from "../components/BidHistoryItem";
+import { useSession } from "next-auth/react";
 
 const fetchAuctionCard = async (
   auction_id: string
@@ -34,22 +35,45 @@ const fetchBidHistory = async (auction_id: string): Promise<BidProps[]> => {
   return data.bidHistory.reverse();
 };
 
+const endAuction = async (auction_id: string) => {
+  try {
+    await axios.post(`/api/auction-card/${auction_id}/end`);
+  } catch (error) {
+    console.error("Failed to end auction:", error);
+    toast.error("Failed to end auction");
+  }
+};
+
 export default function AuctionCardPage() {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
   const { auction_id } = useParams<{ auction_id: string }>();
 
   const { data: auctionCard, isLoading } = useQuery<AuctionCardType>({
     queryKey: ["auction_card", auction_id],
     queryFn: () => fetchAuctionCard(auction_id),
+    refetchInterval: 15000,
   });
 
   const { data: bidHistory } = useQuery<BidProps[]>({
     queryKey: ["bid_history", auction_id],
     queryFn: () => fetchBidHistory(auction_id),
-    refetchInterval: 30000,
+    refetchInterval: 15000,
   });
 
+  const isAuctionEnded = () => {
+    return (
+      auctionCard &&
+      auctionCard.end_time &&
+      new Date(auctionCard.end_time) < new Date()
+    );
+  };
+
   useEffect(() => {
+    if (isAuctionEnded() && auctionCard?.auction_status === "active") {
+      endAuction(auction_id);
+    }
+
     queryClient.invalidateQueries({ queryKey: ["auction_card"] });
     queryClient.invalidateQueries({ queryKey: ["bid_history"] });
   }, [queryClient]);
@@ -62,7 +86,7 @@ export default function AuctionCardPage() {
         </div>
       ) : auctionCard ? (
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-1/2 relative group">
             <img
               src={auctionCard.image_url}
               alt={auctionCard.title}

@@ -64,6 +64,7 @@ export async function POST(
           seller_name: userName as string,
           end_time: new Date(auctionCard.end_time).toISOString(),
           image_url: auctionCard.image_url,
+          auction_status: "active",
         },
       ])
       .select();

@@ -56,7 +56,10 @@ export const auctionFormSchema = z.object({
     .refine((file) => {
       if (!file) return true;
       return ACCEPTED_IMAGE_TYPES.includes(file.type);
-    }, "File must be a JPEG, JPG, PNG, or WebP"),
+    }, "File must be a JPEG, JPG, PNG, or WebP")
+    .refine((file) => {
+      return file || true;
+    }, "File is required"),
 });
 
 function getImageUrl(publicUrl: string, uniqueFilename: string) {

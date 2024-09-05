@@ -9,6 +9,7 @@ interface AuctionDetailsProps {
 
 export const AuctionDetails = ({ auctionCard }: AuctionDetailsProps) => {
   const [days, hours, minutes, seconds] = useCountdown(auctionCard.end_time);
+
   let showCounter = true;
 
   if (days + hours + minutes + seconds <= 0) {
@@ -26,27 +27,29 @@ export const AuctionDetails = ({ auctionCard }: AuctionDetailsProps) => {
             seconds={seconds}
           />
         ) : (
-          <ShowCounter days={0} hours={0} minutes={0} seconds={0} />
+          <p className="text-center text-red-500">Auction Ended</p>
         )}
       </div>
       <h2 className="text-lg md:text-xl font-semibold mb-2">Auction Details</h2>
       <ul className="space-y-2">
         <li className="flex items-center">
-          <UserIcon className="flex items-center mx-2" />
-          {auctionCard.seller_name || "N/A"}
+          <UserIcon className="flex-shrink-0 mr-2" />
+          <span>Seller: {auctionCard.seller_name || "N/A"}</span>
         </li>
         <li className="flex items-center">
-          <CalendarIcon className="flex items-center mx-2" />
-
-          {auctionCard.created_at
-            ? new Date(auctionCard.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "N/A"}
+          <CalendarIcon className="flex-shrink-0 mr-2" />
+          <span>
+            Created:{" "}
+            {auctionCard.created_at
+              ? new Date(auctionCard.created_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "N/A"}
+          </span>
         </li>
       </ul>
     </div>

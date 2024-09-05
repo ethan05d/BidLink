@@ -59,6 +59,10 @@ export const BidForm = ({ auctionCard }: { auctionCard: AuctionCardType }) => {
     );
   };
 
+  const isAuctionEnded = () => {
+    return auctionCard.end_time && new Date(auctionCard.end_time) < new Date();
+  };
+
   const incrementBid = () => {
     const maxBidAmount = MAX_BID_AMOUNT_MULTIPLIER * auctionCard.starting_bid;
     if (bidAmount + incrementAmount > maxBidAmount) {
@@ -98,6 +102,10 @@ export const BidForm = ({ auctionCard }: { auctionCard: AuctionCardType }) => {
 
     placeBidMutation.mutate(bidAmount);
   };
+
+  if (isAuctionEnded()) {
+    return null;
+  }
 
   if (!shouldRenderBidForm()) {
     return null;

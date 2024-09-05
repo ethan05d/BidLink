@@ -1,14 +1,6 @@
 import { BidHistoryItem, BidProps } from "./BidHistoryItem";
 
 export const BidHistory = ({ bidHistory }: { bidHistory: BidProps[] }) => {
-  if (!bidHistory || bidHistory.length === 0) {
-    return (
-      <p className="flex justify-center text-gray-500 dark:text-gray-400">
-        No bid history available.
-      </p>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="bg-muted p-4 rounded-lg">
